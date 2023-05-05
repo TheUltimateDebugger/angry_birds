@@ -1,2 +1,2 @@
 # angry_birds
-the super advanced simulation to our PROM
+the super advanced simulation for our PROM
