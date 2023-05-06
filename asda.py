@@ -6,18 +6,17 @@ from drone import Drone
 
 
 class Asda:
-    def __init__(self, r_100_loss, r_safe, drones):
+    def __init__(self, r_100_loss, r_safe):
         self._r_loss = r_100_loss
         self.r_safe = r_safe
-        self._drones = drones
+        self._drones = []
         self.missiles = []
         random.seed(time.time() + random.randint(0, 100000))
 
-    def place_drones(self, num_of_drones, distance_from_asda, drone_radius):
+    def place_drones(self, num_of_drones, distance_from_asda, drone_radius, prob_of_succsses):
         theta = 2*math.pi/num_of_drones
-        self._drones = []
         for i in range(num_of_drones):
-            self._drones.append(Drone(math.cos(theta*i)*distance_from_asda, math.sin(theta*i)*distance_from_asda, drone_radius))
+            self._drones.append(Drone(math.cos(theta*i)*distance_from_asda, math.sin(theta*i)*distance_from_asda, drone_radius, prob_of_succsses))
 
 
     def destruction_function(self, distance):
