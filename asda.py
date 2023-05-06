@@ -7,7 +7,7 @@ class Asda:
     def destruction_function(self,x):
         if x<self
     def generate_missile(self):
-        theta=random.uniform(0.0, 6.283)
+        theta=random.uniform(0.0, math.pi*2)
         m=math.tan(theta)
         return m
 
