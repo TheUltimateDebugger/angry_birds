@@ -1,6 +1,7 @@
 import math
 
 import matplotlib.pyplot as plt
+from matplotlib.patches import Circle
 
 
 def calc_dist(coordinate):
@@ -19,5 +20,17 @@ def draw_distrabution(list_of_blocks, resolution):
     plt.show()
     return result
 
-def draw_scene(asda, drones, list_of_blocks):
+def draw_scene(asda, list_of_blocks):
+    asda_kill_drawing = Circle((0, 0), asda._r_loss, color='red', fill=False)
+    asda_safe_drawing = Circle((0, 0), asda.r_safe, color='green', fill=False)
+    plt.margins(1, 1)
+    plt.gca().add_patch(asda_kill_drawing)
+    plt.gca().add_patch(asda_safe_drawing)
+    for drone in asda._drones:
+        drone_drawing = Circle((drone.x, drone.y), drone.radius, color='blue', fill=False)
+        plt.gca().add_patch(drone_drawing)
+    for i in range(len(list_of_blocks)):
+        plt.scatter(list_of_blocks[i][0],list_of_blocks[i][1], color='green')
+        # plt.plot([list_of_blocks[i][0], 100], [list_of_blocks[i][1], 100*asda.missiles[i]], color="yellow", linestyle="--")
+    plt.show()
 
