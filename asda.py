@@ -33,7 +33,7 @@ class Asda:
     def calc_dist(self, coordinate):
         return math.sqrt(coordinate[0] ** 2 + coordinate[1] ** 2)
 
-    def simulate_missiles(self, iterations):
+    def simulate_missiles_and_calculate_prob(self, iterations):
         sum = 0
         for i in range(iterations):
             m = self.generate_missile()
@@ -50,3 +50,16 @@ class Asda:
             else:
                 sum += self.destruction_function(0)
             return 1 - sum / iterations
+
+    def simulate_missiles(self, iterations):
+        list_of_blocks = []
+        for i in range(iterations):
+            m = self.generate_missile()
+            best = (0, 0)
+            for drone in self._drones:
+                if self.calc_dist(drone.missile_block_coordinate(m)) > self.calc_dist(best):
+                    best = drone.missile_block_coordinate(m)
+            list_of_blocks.append(best)
+        return list_of_blocks
+
+
