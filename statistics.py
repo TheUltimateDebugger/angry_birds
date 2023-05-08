@@ -17,8 +17,8 @@ def draw_distrabution(list_of_blocks, resolution):
     for block in list_of_blocks:
         result[round(calc_dist(block) / bucket_diff)] += 1
     print(result[0])
-    print(result[0]/1000)
-    plt.plot(result)
+    print(result[0]/10000)
+    plt.bar(list(range(resolution)), result, align='center', alpha=0.5)
     plt.show()
     return result
 
