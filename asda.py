@@ -2,38 +2,41 @@ import random
 import math
 import time
 
+from constants import DISTANCE_OF_DETECTION_MISSILE, MISSILE_SPEED
 from drone import Drone
+from enemy import Missile
 
 
 class Asda:
-    def __init__(self, r_100_loss, r_safe):
+    def __init__(self, r_100_loss, r_safe, satil):
         self._r_loss = r_100_loss
         self.r_safe = r_safe
+        self.satil = satil
         self._drones = []
         self.missiles = []
         random.seed(time.time() + random.randint(0, 100000))
 
     def place_drones(self, num_of_drones, distance_from_asda, drone_radius, prob_of_succsses):
-        theta = 2*math.pi/num_of_drones
+        theta = 2 * math.pi / num_of_drones
         for i in range(num_of_drones):
-            self._drones.append(Drone(math.cos(theta*i)*distance_from_asda, math.sin(theta*i)*distance_from_asda, drone_radius, prob_of_succsses))
-
+            self._drones.append(
+                Drone(math.cos(theta * i) * distance_from_asda, math.sin(theta * i) * distance_from_asda, drone_radius,
+                      prob_of_succsses))
 
     def destruction_function(self, distance):
         if distance < self._r_loss:
             return 1
         if distance > self.r_safe:
             return 0
-        return (self.r_safe-distance)/self.r_safe
+        return (self.r_safe - distance) / self.r_safe
 
     def generate_missile(self, num_of_missiles):
         for i in range(num_of_missiles):
-            angle_degrees = random.uniform(0, 360)
             # Convert the angle to radians
-            angle_radians = math.radians(angle_degrees)
-            # theta = random.uniform(0.0, math.pi * 2)
-            self.missiles.append(math.tan(angle_radians))
-
+            angle_radians = random.uniform(0, math.pi)
+            direction = random.randint(0, 1)
+            self.missiles.append(
+                Missile(math.tan(angle_radians), direction, MISSILE_SPEED, DISTANCE_OF_DETECTION_MISSILE))
 
     def calc_dist(self, coordinate):
         return math.sqrt(coordinate[0] ** 2 + coordinate[1] ** 2)
@@ -61,10 +64,8 @@ class Asda:
         self.generate_missile(iterations)
         for m in self.missiles:
             best = (0, 0)
-            for drone in self._drones:
+            for drone in self.satil.get_drones():
                 if self.calc_dist(drone.missile_block_coordinate(m)) > self.calc_dist(best):
                     best = drone.missile_block_coordinate(m)
             list_of_blocks.append(best)
         return list_of_blocks
-
-

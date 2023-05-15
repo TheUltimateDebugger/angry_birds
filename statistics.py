@@ -28,6 +28,9 @@ def draw_scene(asda, list_of_blocks):
     # plt.margins(1, 1)
     plt.gca().add_patch(asda_kill_drawing)
     plt.gca().add_patch(asda_safe_drawing)
+    drone_drawing = Circle((asda.satil.location[0], asda.satil.location[1]), 10, color='blue', fill=True)
+    plt.gca().add_patch(drone_drawing)
+
     for drone in asda._drones:
         drone_drawing = Circle((drone.x, drone.y), drone.radius, color='blue', fill=False)
         plt.gca().add_patch(drone_drawing)
