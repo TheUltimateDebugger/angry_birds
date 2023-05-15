@@ -1,9 +1,10 @@
 from asda import Asda
+import constants as c
 from statistics import draw_distrabution, draw_scene
 
 if __name__ == '__main__':
     asda1 = Asda(65, 100)
-    asda1.place_drones(50, 120, 15, 0.8)
+    asda1.place_drones(50, 120, c.DRONE_SPEAD, 0.8)
     asda1.place_drones(30, 130, 15, 0.8)
     asda1.place_drones(20, 105, 15, 0.8)
     result = asda1.simulate_missiles(10000)
