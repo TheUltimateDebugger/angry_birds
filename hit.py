@@ -13,3 +13,6 @@ class Hit:
 
     def calc_dist(self):
         return (self.x ** 2 + self.x ** 2)**0.5
+
+    def __str__(self):
+        return "(" + str(self.x) + ", " + str(self.y) + ") " + ("V" if self.is_by_drone else "X") + " " + str(self.missile)

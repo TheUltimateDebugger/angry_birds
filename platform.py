@@ -9,19 +9,19 @@ from missile import Missile
 
 
 class Platform:
-    def __init__(self, r_100_loss, r_safe, ships=None):
+    def __init__(self, r_100_loss, r_safe, degree_range, ships=None):
         self.r_loss = r_100_loss
         self.r_safe = r_safe
+        self.degree_range = degree_range
         self.ships = ships
         self.missiles = []
         self.hits_log = []
         random.seed(time.time())
 
     def place_ship_circle(self, radius):
-        theta = 2 * math.pi / len(self.ships)
-        self.ships = self.ships
+        theta = (self.degree_range[1] - self.degree_range[0]) / (len(self.ships) + 1)
         for i in range(len(self.ships)):
-            self.ships[i].place_ship(math.cos(theta * i) * radius, math.sin(theta * i) * radius)
+            self.ships[i].place_ship(math.cos(theta * (i+1)) * radius if theta * (i+1) >= 0.5*math.pi else -math.cos(theta * (i+1)) * radius, math.sin(theta * (i+1)) * radius if theta * (i+1) < math.pi else -math.sin(theta * (i+1)) * radius)
 
     def get_crit_hit_place(self, missile):
         x1, x2 = (self.r_loss**2/(1+missile.coefficient**2))**0.5, -((self.r_loss**2/(1+missile.coefficient**2))**0.5)
@@ -43,11 +43,17 @@ class Platform:
 
     def generate_missile(self, num_of_missiles):
         for i in range(num_of_missiles):
-            theta = random.uniform(0, 2*math.pi)
+            theta = random.uniform(self.degree_range[0], self.degree_range[1])
             self.missiles.append(Missile(theta))
 
     def calc_dist(self, coordinate):
         return math.sqrt(coordinate[0] ** 2 + coordinate[1] ** 2)
+
+    def get_drone_used(self):
+        sum = 0
+        for ship in self.ships:
+            sum += ship.drones_used
+        return sum
 
     def simulate_missiles(self, iterations):
         self.generate_missile(iterations)

@@ -11,7 +11,10 @@ class Missile:
         self.coefficient = math.tan(theta)
 
     def is_hitting(self, x, y):
-        return self.coefficient * x == y and ((y > 0) == self.direction)
+        return self.coefficient * x == y and self.is_direction_right(x)
 
     def is_direction_right(self, x):
-        return (x * self.coefficient > 0) == self.direction
+        return (x * self.coefficient < 0) == self.direction or (self.coefficient * x == 0 and self.direction)
+
+    def __str__(self):
+        return str(self.coefficient) + " " + ("+" if self.direction else "-")
