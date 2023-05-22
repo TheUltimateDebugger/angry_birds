@@ -5,67 +5,48 @@ import time
 from constants import DISTANCE_OF_DETECTION_MISSILE, MISSILE_SPEED
 from drone import Drone
 from enemy import Missile
+from hit import Hit
 
 
 class Platform:
-    def __init__(self, r_100_loss, r_safe, satil):
-        self._r_loss = r_100_loss
+    def __init__(self, r_100_loss, r_safe, ships=None):
+        self.r_loss = r_100_loss
         self.r_safe = r_safe
-        self.satil = satil
-        self._drones = []
+        self.ships = ships
         self.missiles = []
-        random.seed(time.time() + random.randint(0, 100000))
+        self.hits_log = []
+        random.seed(time.time())
 
-    def place_drones(self, num_of_drones, distance_from_asda, drone_radius, prob_of_succsses):
-        theta = 2 * math.pi / num_of_drones
-        for i in range(num_of_drones):
-            self._drones.append(
-                Drone(math.cos(theta * i) * distance_from_asda, math.sin(theta * i) * distance_from_asda, drone_radius,
-                      prob_of_succsses))
+    def place_ship_circle(self, num_of_ships, radius, ship_list):
+        theta = 2 * math.pi / num_of_ships
+        self.ships = ship_list
+        for i in range(num_of_ships):
+            self.ships[i].place_ship(math.cos(theta * i) * radius, math.sin(theta * i) * radius)
 
-    def destruction_function(self, distance):
-        if distance < self._r_loss:
-            return 1
-        if distance > self.r_safe:
-            return 0
-        return (self.r_safe - distance) / self.r_safe
+    def get_crit_hit_place(self, missile):
+        x1, x2 = (self.r_loss**2/(1+missile.coefficient))**0.5, -(self.r_loss**2/(1+missile.coefficient))**0.5
+        if missile.is_direction_right(x1):
+            return x1, x1*missile.coefficient
+        else:
+            return x2, x2*missile.coefficient
+
+    def log_hit(self, missile):
+        result = Hit(False, missile)
+        for ship in self.ships:
+            other = ship.get_hit_log(self, missile)
+            if other.is_better(result):
+                result = other
+        return result
 
     def generate_missile(self, num_of_missiles):
         for i in range(num_of_missiles):
-            # Convert the angle to radians
-            angle_radians = random.uniform(0, math.pi)
-            direction = random.randint(0, 1)
-            self.missiles.append(
-                Missile(math.tan(angle_radians), direction, MISSILE_SPEED, DISTANCE_OF_DETECTION_MISSILE))
+            theta = random.uniform(0, 2*math.pi)
+            self.missiles.append(Missile(theta))
 
     def calc_dist(self, coordinate):
         return math.sqrt(coordinate[0] ** 2 + coordinate[1] ** 2)
 
-    # def simulate_missiles_and_calculate_prob(self, iterations):
-    #     sum = 0
-    #     for i in range(iterations):
-    #         m = self.generate_missile(iterations)
-    #         list_of_blocks = []
-    #         for drone in self._drones:
-    #             if drone.missile_block_coordinate(m) != (0, 0):
-    #                 list_of_blocks.append(drone.missile_block_coordinate(m))
-    #         if len(list_of_blocks) > 0:
-    #             max = self.calc_dist(list_of_blocks[0])
-    #             for j in list_of_blocks:
-    #                 if self.calc_dist(j) > max:
-    #                     max = self.calc_dist(j)
-    #             sum += self.destruction_function(max)
-    #         else:
-    #             sum += self.destruction_function(0)
-    #         return 1 - sum / iterations
-
     def simulate_missiles(self, iterations):
-        list_of_blocks = []
         self.generate_missile(iterations)
         for m in self.missiles:
-            best = (0, 0)
-            for drone in self.satil.get_drones():
-                if self.calc_dist(drone.missile_block_coordinate(m)) > self.calc_dist(best):
-                    best = drone.missile_block_coordinate(m)
-            list_of_blocks.append(best)
-        return list_of_blocks
+            self.log_hit(m)
