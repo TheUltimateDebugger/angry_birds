@@ -33,9 +33,9 @@ class Platform:
         x1, x2 = (self.r_loss ** 2 / (1 + missile.coefficient ** 2)) ** 0.5, -(
                     (self.r_loss ** 2 / (1 + missile.coefficient ** 2)) ** 0.5)
         if missile.is_direction_right(x1):
-            return x1 * missile.coefficient, x1
+            return x1, x1 * missile.coefficient
         else:
-            return x2 * missile.coefficient, x2
+            return x2, x2 * missile.coefficient
 
     def log_hit(self, missile):
         result = Hit(0, 0, False, missile)

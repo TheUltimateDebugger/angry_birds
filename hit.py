@@ -1,5 +1,5 @@
 class Hit:
-    def __init__(self, y, x, is_by_drone, missile):
+    def __init__(self, x, y, is_by_drone, missile):
         self.x = x
         self.y = y
         self.is_by_drone = is_by_drone

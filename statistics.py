@@ -35,7 +35,7 @@ def draw_distrabution(list_of_hits, resolution):
 
 
 def draw_scene(platform):
-    border = max(max((ship.x ** 2 + ship.y ** 2) ** 0.5 for ship in platform.ships), platform.r_safe)
+    border = max(max((ship.x ** 2 + ship.y ** 2) ** 0.5 for ship in platform.ships), platform.r_safe) * 1.5
     for i in range(len(platform.degree_range)):
         temp = math.tan((platform.degree_range[i])) if platform.degree_range[i] <= math.pi else -math.tan((platform.degree_range[i]))
         if platform.degree_range[i] == math.pi:
@@ -60,8 +60,11 @@ def draw_scene(platform):
     for hit in platform.hits_log:
         hits_x.append(hit.x)
         hits_y.append(hit.y)
+        if not hit.is_by_drone:
+            temp = get_border(hit.x, hit.y, hit.missile.coefficient, border)
+            plt.plot([hit.x, temp[0]], [hit.y, temp[1]], color="red")
 
-    plt.scatter(hits_y, hits_x, color='green')
+    plt.scatter(hits_x, hits_y, color='green')
     # for i in range(len(list_of_blocks)):
     #     plt.scatter(list_of_blocks[i][0],list_of_blocks[i][1], color='green')
     #     # plt.plot([list_of_blocks[i][0], 100], [list_of_blocks[i][1], 100*asda.missiles[i]], color="yellow", linestyle="--")
