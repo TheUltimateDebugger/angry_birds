@@ -7,7 +7,7 @@ from drone import Drone
 from enemy import Missile
 
 
-class Asda:
+class Platform:
     def __init__(self, r_100_loss, r_safe, satil):
         self._r_loss = r_100_loss
         self.r_safe = r_safe
