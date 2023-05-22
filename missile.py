@@ -3,6 +3,7 @@ import math
 
 class Missile:
     def __init__(self, theta):
+        self.direction = False
         if theta >= math.pi:
             self.direction = False
         else:

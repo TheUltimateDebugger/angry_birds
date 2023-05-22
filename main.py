@@ -10,6 +10,6 @@ if __name__ == '__main__':
     ships = [Ship(C.R_EFFECTIVE_MISSILE, drone, C.SHIP_BLOCK_PROB, C.DRONE_SURVIVAL, C.DRONES_FOR_MISSILE) for i in range(C.NUM_OF_SHIPS)]
     platform = Platform(C.FATAL_RADIUS, C.SAFE_RADIUS, ships)
     platform.place_ship_circle(C.SHIPS_RADIUS)
-    platform.simulate_missiles(1000)
+    platform.simulate_missiles(100)
     draw_distrabution(platform.hits_log, 100)
     draw_scene(platform)

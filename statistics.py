@@ -10,12 +10,12 @@ def calc_dist(coordinate):
 def draw_distrabution(list_of_hits, resolution):
     max_distance = 0
     for block in list_of_hits:
-        if calc_dist(block) > max_distance:
-            max_distance = calc_dist(block)
+        if block.calc_dist() > max_distance:
+            max_distance = block.calc_dist()
     bucket_diff = max_distance / (resolution - 1)
     result = [0] * resolution
     for hit in list_of_hits:
-        result[round(calc_dist(hit.calc_dist) / bucket_diff)] += 1
+        result[round(hit.calc_dist() / bucket_diff)] += 1
     print(result[0])
     print(result[0]/10000)
     plt.bar(list(range(resolution)), result, align='center', alpha=0.5)
@@ -23,7 +23,7 @@ def draw_distrabution(list_of_hits, resolution):
     return result
 
 def draw_scene(platform):
-    platform_kill_drawing = Circle((0, 0), platform._r_loss, color='red', fill=True)
+    platform_kill_drawing = Circle((0, 0), platform.r_loss, color='red', fill=True)
     platform_safe_drawing = Circle((0, 0), platform.r_safe, color='green', fill=False)
     # plt.margins(1, 1)
     plt.gca().add_patch(platform_kill_drawing)
@@ -39,9 +39,7 @@ def draw_scene(platform):
         hits_x.append(hit.x)
         hits_y.append(hit.y)
 
-    drone_drawing = Circle((platform.satil.location[0], platform.satil.location[1]), 10, color='blue', fill=True)
-    plt.gca().add_patch(drone_drawing)
-    plt.scatter(hits_x, hits_y, color='green')
+    plt.scatter(hits_y, hits_x, color='green')
     # for i in range(len(list_of_blocks)):
     #     plt.scatter(list_of_blocks[i][0],list_of_blocks[i][1], color='green')
     #     # plt.plot([list_of_blocks[i][0], 100], [list_of_blocks[i][1], 100*asda.missiles[i]], color="yellow", linestyle="--")

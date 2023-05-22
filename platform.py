@@ -4,8 +4,8 @@ import time
 
 from constants import DISTANCE_OF_DETECTION_MISSILE, MISSILE_SPEED
 from drone import Drone
-from enemy import Missile
 from hit import Hit
+from missile import Missile
 
 
 class Platform:
@@ -24,20 +24,21 @@ class Platform:
             self.ships[i].place_ship(math.cos(theta * i) * radius, math.sin(theta * i) * radius)
 
     def get_crit_hit_place(self, missile):
-        x1, x2 = (self.r_loss**2/(1+missile.coefficient))**0.5, -(self.r_loss**2/(1+missile.coefficient))**0.5
+        x1, x2 = (self.r_loss**2/(1+missile.coefficient**2))**0.5, -((self.r_loss**2/(1+missile.coefficient**2))**0.5)
         if missile.is_direction_right(x1):
             return x1, x1*missile.coefficient
         else:
             return x2, x2*missile.coefficient
 
     def log_hit(self, missile):
-        result = Hit(False, missile)
+        result = Hit(0, 0, False, missile)
         for ship in self.ships:
             other = ship.get_hit_log(self, missile)
             if other.is_better(result):
                 result = other
         if not result.is_by_drone:
             result.set_hit_point(self.get_crit_hit_place(missile))
+        self.hits_log.append(result)
         return result
 
     def generate_missile(self, num_of_missiles):
