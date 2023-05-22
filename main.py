@@ -10,10 +10,10 @@ if __name__ == '__main__':
     platform = Platform(C.FATAL_RADIUS, C.SAFE_RADIUS, C.ATTACK_DEGREES, ships)
     platform.place_ship_circle_smart()
     # platform.place_ship_circle(C.SHIPS_RADIUS)
-    platform.simulate_missiles(100)
+    platform.simulate_missiles(C.NUM_OF_MISSILES)
     # for hit in platform.hits_log:
     #     print(hit)
     print("drone used:" + str(platform.get_drone_used()))
-
-    draw_distrabution(platform.hits_log, 100)
+    print("cost per missile: " + str(platform.get_drone_used() / len(platform.hits_log)))
+    draw_distrabution(platform.hits_log, C.RESOLUTION)
     draw_scene(platform)

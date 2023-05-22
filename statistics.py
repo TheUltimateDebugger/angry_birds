@@ -5,7 +5,7 @@ from matplotlib.patches import Circle
 
 
 def calc_dist(coordinate):
-    return math.sqrt(coordinate[0] ** 2 + coordinate[1] ** 2)
+    return (coordinate[0] ** 2 + coordinate[1] ** 2)**0.5
 
 
 def get_border(x, y, a, border):
@@ -16,16 +16,18 @@ def get_border(x, y, a, border):
 
 def draw_distrabution(list_of_hits, resolution):
     max_distance = 0
-    for block in list_of_hits:
-        if block.calc_dist() > max_distance:
-            max_distance = block.calc_dist()
+    for hit in list_of_hits:
+        if hit.calc_dist() > max_distance:
+            max_distance = hit.calc_dist()
     bucket_diff = max_distance / (resolution - 1)
     result = [0] * resolution
     losses = 0
     for hit in list_of_hits:
-        if hit.is_by_drone == False:
+        if not hit.is_by_drone:
             losses += 1
         result[round(hit.calc_dist() / bucket_diff)] += 1
+    x_labels = range(0, math.ceil(max_distance), math.floor(max_distance / (resolution - 1)))
+    plt.xticks(range(len(x_labels)), x_labels, rotation=90)
     print("hits: " + str(losses) + " out of " + str(len(list_of_hits)))
     plt.bar(list(range(resolution)), result, align='center', alpha=0.5)
     plt.show()
