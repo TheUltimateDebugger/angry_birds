@@ -4,7 +4,7 @@ import math
 class Missile:
     def __init__(self, theta):
         self.direction = False
-        if theta >= math.pi:
+        if theta%(2*math.pi) >= math.pi:
             self.direction = False
         else:
             self.direction = True
@@ -14,7 +14,7 @@ class Missile:
         return self.coefficient * x == y and self.is_direction_right(x)
 
     def is_direction_right(self, x):
-        return (x * self.coefficient < 0) == self.direction or (self.coefficient * x == 0 and self.direction)
+        return (x * self.coefficient > 0) == self.direction
 
     def __str__(self):
         return str(self.coefficient) + " " + ("+" if self.direction else "-")

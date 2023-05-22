@@ -19,16 +19,23 @@ class Platform:
         random.seed(time.time())
 
     def place_ship_circle(self, radius):
-        theta = (self.degree_range[1] - self.degree_range[0]) / (len(self.ships) + 1)
+        theta = (self.degree_range[1] - self.degree_range[0]) / (len(self.ships))
         for i in range(len(self.ships)):
-            self.ships[i].place_ship(math.cos(theta * (i+1)) * radius if theta * (i+1) >= 0.5*math.pi else -math.cos(theta * (i+1)) * radius, math.sin(theta * (i+1)) * radius if theta * (i+1) < math.pi else -math.sin(theta * (i+1)) * radius)
+            dx = 1 if (theta * i + self.degree_range[0] + 0.5*theta) % (2*math.pi) < 0.5 * math.pi else -1
+            dy = 1 if (theta * i + self.degree_range[0] + 0.5*theta) % (2*math.pi) < math.pi else -1
+            self.ships[i].place_ship(math.cos(theta * i + self.degree_range[0] + 0.5*theta) * radius * dx,
+                                     math.sin(theta * i + self.degree_range[0] + 0.5*theta) * dy * radius)
+
+    def place_ship_circle_smart(self):
+        self.place_ship_circle((self.r_safe**2-self.ships[0].radius**2)**0.5)
 
     def get_crit_hit_place(self, missile):
-        x1, x2 = (self.r_loss**2/(1+missile.coefficient**2))**0.5, -((self.r_loss**2/(1+missile.coefficient**2))**0.5)
+        x1, x2 = (self.r_loss ** 2 / (1 + missile.coefficient ** 2)) ** 0.5, -(
+                    (self.r_loss ** 2 / (1 + missile.coefficient ** 2)) ** 0.5)
         if missile.is_direction_right(x1):
-            return x1, x1*missile.coefficient
+            return x1 * missile.coefficient, x1
         else:
-            return x2, x2*missile.coefficient
+            return x2 * missile.coefficient, x2
 
     def log_hit(self, missile):
         result = Hit(0, 0, False, missile)

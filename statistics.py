@@ -21,8 +21,12 @@ def draw_distrabution(list_of_hits, resolution):
             max_distance = block.calc_dist()
     bucket_diff = max_distance / (resolution - 1)
     result = [0] * resolution
+    losses = 0
     for hit in list_of_hits:
+        if hit.is_by_drone == False:
+            losses += 1
         result[round(hit.calc_dist() / bucket_diff)] += 1
+    print("hits: " + str(losses) + " out of " + str(len(list_of_hits)))
     plt.bar(list(range(resolution)), result, align='center', alpha=0.5)
     plt.show()
     return result
@@ -32,6 +36,10 @@ def draw_scene(platform):
     border = max(max((ship.x ** 2 + ship.y ** 2) ** 0.5 for ship in platform.ships), platform.r_safe)
     for i in range(len(platform.degree_range)):
         temp = math.tan((platform.degree_range[i])) if platform.degree_range[i] <= math.pi else -math.tan((platform.degree_range[i]))
+        if platform.degree_range[i] == math.pi:
+            temp = -1
+        if platform.degree_range[i] == 0:
+            temp = 1
         b = get_border(int(temp/abs(temp)), temp, math.tan((platform.degree_range[i])), border)
         plt.plot([0, b[0]], [0, b[1]], linestyle="--", color="orange")
 
