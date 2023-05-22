@@ -15,6 +15,7 @@ def get_border(x, y, a, border):
 
 
 def draw_distrabution(list_of_hits, resolution):
+    distrabution = plt.figure(1)
     max_distance = 0
     for hit in list_of_hits:
         if hit.calc_dist() > max_distance:
@@ -30,11 +31,12 @@ def draw_distrabution(list_of_hits, resolution):
     plt.xticks(range(len(x_labels)), x_labels, rotation=90)
     print("hits: " + str(losses) + " out of " + str(len(list_of_hits)))
     plt.bar(list(range(resolution)), result, align='center', alpha=0.5)
-    plt.show()
+    distrabution.show()
     return result
 
 
 def draw_scene(platform):
+    scene = plt.figure(2)
     border = max(max((ship.x ** 2 + ship.y ** 2) ** 0.5 for ship in platform.ships), platform.r_safe) * 1.5
     for i in range(len(platform.degree_range)):
         temp = math.tan((platform.degree_range[i])) if platform.degree_range[i] <= math.pi else -math.tan((platform.degree_range[i]))
@@ -48,21 +50,29 @@ def draw_scene(platform):
     platform_kill_drawing = Circle((0, 0), platform.r_loss, color='red', fill=False)
     platform_safe_drawing = Circle((0, 0), platform.r_safe, color='green', fill=False)
     # plt.margins(1, 1)
-    plt.gca().add_patch(platform_kill_drawing)
-    plt.gca().add_patch(platform_safe_drawing)
+    scene.gca().add_patch(platform_kill_drawing)
+    scene.gca().add_patch(platform_safe_drawing)
 
     for ship in platform.ships:
         ship_drawing = Circle((ship.x, ship.y), ship.radius, color='blue', fill=False)
-        plt.gca().add_patch(ship_drawing)
+        scene.gca().add_patch(ship_drawing)
 
     hits_x = []
     hits_y = []
     for hit in platform.hits_log:
         hits_x.append(hit.x)
         hits_y.append(hit.y)
+
+    # for hit in platform.hits_log:
+    #     if hit.is_by_drone:
+    #         temp = get_border(hit.x, hit.y, hit.missile.coefficient, border)
+    #         plt.plot([hit.x, temp[0]], [hit.y, temp[1]], color="green")
+
+    for hit in platform.hits_log:
         if not hit.is_by_drone:
             temp = get_border(hit.x, hit.y, hit.missile.coefficient, border)
             plt.plot([hit.x, temp[0]], [hit.y, temp[1]], color="red")
+
 
     plt.scatter(hits_x, hits_y, color='green')
     # for i in range(len(list_of_blocks)):
