@@ -4,9 +4,18 @@ class Hit:
         self.y = y
         self.is_by_drone = is_by_drone
         self.missile = missile
+
     def __init__(self, is_by_drone, missile):
+        self.x = 0
+        self.y = 0
         self.is_by_drone = is_by_drone
         self.missile = missile
 
+    def set_hit_point(self, coord):
+        self.x = coord[0]
+        self.y = coord[1]
     def is_better(self, other):
-        return self.x**2 + self.y**2 > other.x**2 + other.y**2
+        return self.x ** 2 + self.y ** 2 > other.x ** 2 + other.y ** 2
+
+    def calc_dist(self):
+        return (self.x ** 2 + self.x ** 2)**0.5

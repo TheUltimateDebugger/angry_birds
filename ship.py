@@ -17,6 +17,16 @@ class Ship:
         self.prob_of_working = prob_of_working
         self.drones_for_missile = drones_for_missile
 
+    def __init__(self, effective_radius, drone, prob_of_working, prob_of_surviving, drones_for_missile,
+                 color="blue") -> None:
+        self.color = color
+        self.drones_used = 0
+        self.drone = drone
+        self.prob_of_surviving = prob_of_surviving
+        self.radius = effective_radius
+        self.prob_of_working = prob_of_working
+        self.drones_for_missile = drones_for_missile
+
     def place_ship(self, x, y):
         self.x = x
         self.y = y
@@ -44,12 +54,12 @@ class Ship:
         x2 = (-b - (b ** 2 - 4 * a * c) ** 0.5) / (2 * a)
 
         if not missile.is_right_direction(x1):
-            return Hit(x2, missile.coeffient * x2, False, missile)
+            return Hit(x2, missile.coeffient * x2, True, missile)
 
         if not missile.is_right_direction(x2):
-            return Hit(x1, missile.coeffient * x1, False, missile)
+            return Hit(x1, missile.coeffient * x1, True, missile)
 
         if x1 ** 2 + (x1 * missile.theata) ** 2 > x2 ** 2 + (x2 * missile.theata) ** 2:
-            return Hit(x1, missile.coeffient * x1, False, missile)
+            return Hit(x1, missile.coeffient * x1, True, missile)
         else:
-            return Hit(x2, missile.coeffient * x2, False, missile)
+            return Hit(x2, missile.coeffient * x2, True, missile)

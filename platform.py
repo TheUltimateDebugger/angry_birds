@@ -17,10 +17,10 @@ class Platform:
         self.hits_log = []
         random.seed(time.time())
 
-    def place_ship_circle(self, num_of_ships, radius, ship_list):
-        theta = 2 * math.pi / num_of_ships
-        self.ships = ship_list
-        for i in range(num_of_ships):
+    def place_ship_circle(self, radius):
+        theta = 2 * math.pi / len(self.ships)
+        self.ships = self.ships
+        for i in range(len(self.ships)):
             self.ships[i].place_ship(math.cos(theta * i) * radius, math.sin(theta * i) * radius)
 
     def get_crit_hit_place(self, missile):
@@ -36,6 +36,8 @@ class Platform:
             other = ship.get_hit_log(self, missile)
             if other.is_better(result):
                 result = other
+        if not result.is_by_drone:
+            result.set_hit_point(self.get_crit_hit_place(missile))
         return result
 
     def generate_missile(self, num_of_missiles):
