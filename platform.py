@@ -9,11 +9,12 @@ from missile import Missile
 
 
 class Platform:
-    def __init__(self, r_100_loss, r_safe, degree_range, ships=None):
+    def __init__(self, r_100_loss, r_safe, degree_range, ships, system_prob):
         self.r_loss = r_100_loss
         self.r_safe = r_safe
         self.degree_range = degree_range
         self.ships = ships
+        self.system_prob = system_prob
         self.missiles = []
         self.hits_log = []
         random.seed(time.time())
@@ -39,10 +40,11 @@ class Platform:
 
     def log_hit(self, missile):
         result = Hit(0, 0, False, missile)
-        for ship in self.ships:
-            other = ship.get_hit_log(self, missile)
-            if other.is_better(result):
-                result = other
+        if random.uniform(0, 1) > (1 - self.system_prob):
+            for ship in self.ships:
+                other = ship.get_hit_log(self, missile)
+                if other.is_better(result):
+                    result = other
         if not result.is_by_drone:
             result.set_hit_point(self.get_crit_hit_place(missile))
         self.hits_log.append(result)
